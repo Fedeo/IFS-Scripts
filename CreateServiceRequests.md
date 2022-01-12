@@ -124,11 +124,7 @@ Create RequestHandling.svc/SrvRequestVirtualSet into ServiceRequestResponse
     "IsAppointmentBookingAllowedFinal": true,
     "LocationId": "{$LocationId}",
     "AddressId": "{$AddressId}",
-    "ReferenceId":"{$input.ReferenceId}",
-    "ReportedObjectId":"{$input.ReportedObjectId}",
-    "ReportedObjectSite":"{$input.ReportedObjectSite}",
-    "ContractId":"{$input.ContractId}",
-    "LineNo":"{$input.LineNo}"
+    "ReferenceId":"{$input.ReferenceId}"
 }
 
 

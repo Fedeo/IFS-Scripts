@@ -1,12 +1,12 @@
 ```cs
-Eval 11112 into MyReferenceId
-
 Query  RequestHandling.svc/SrvRequestSet Select "ReqId,RowState,CancelAllScope" Filter with Json Into AllRequestIdsToBeCancelled
 {
-    "ReferenceId" : "{$MyReferenceId}",
-    "RowState" : "!= Cancelled"
+    "ReferenceId" : "{$input.ReferenceId}",
+    "RowState" : "!=Cancelled"
     
 }
+
+Print AllRequestIdsToBeCancelled
 
 Eval AllRequestIdsToBeCancelled.value.Items(0).ReqId into myReqId
 
@@ -19,7 +19,6 @@ Query ServiceWorkHandling.svc/JtTaskSet Select "TaskSeq,Objstate" Filter with Js
     "ReqId" : "{$myReqId}"
 }
 
-Print AllTasksIdsToBeCancelled
 
 Eval AllTasksIdsToBeCancelled.value.ItemsCount() into totTasks
 Eval null into firstTask

@@ -2,6 +2,6 @@
 
 // Create Resource Groups
 
-ExecuteCsv CreateServiceRequests/ServiceRequests.csv Using ServiceRequests.md
+ExecuteCsv servicerequests/ServiceRequests.csv Using CreateServiceRequests.md
 
 ```

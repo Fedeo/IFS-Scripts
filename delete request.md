@@ -2,6 +2,6 @@
 
 // Create Resource Groups
 
-ExecuteCsv DeleteServiceRequests/ServiceRequests.csv Using DeleteServiceRequests.md
+ExecuteCsv servicerequests/ServiceRequests.csv Using DeleteServiceRequests.md
 
 ```

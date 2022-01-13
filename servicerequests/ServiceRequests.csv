@@ -1,2 +1,3 @@
 ﻿ReferenceId,CustomerId,Name,Country,Address1,Address2,ZipCode,City,lat,long,requestType,requestDescr,OrganizationId,ReportedObjectId,ReportedObjectSite,ContractId,LineNo
-12345678,9999999,Federico Sensi,IT,Piazza Navona,1,100,Rome,41.8991368,12.4711034,S01-INSTALL,Created by rest tool,SP01,,,,
+12345678,9999999,Federico Sensi,IT,Piazza Navona,1,100,Rome,41.8991368,12.4711034,IN-B2C,Created by rest tool,SP_S01F1,,,,
+12345678,9999999,Federico Sensi,IT,Piazza Navona,1,100,Rome,41.8991368,12.4711034,IN-B2C,Created by rest tool,SP_S01F1,FUNC-TEST1,S01F1,,

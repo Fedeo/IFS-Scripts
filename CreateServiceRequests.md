@@ -112,6 +112,16 @@ Create MapPositionsHandling.svc/MapPositionSet When KeyRefExists.value.ItemsCoun
 }
 
 
+Eval  {%input.ReportedObjectId} into myReportedObjectId 
+Eval  {%input.ReportedObjectSite} into myReportedObjectSite
+Eval  {%input.ContractId} into myContractId 
+Eval  {%input.LineNo} into myLineNo 
+
+Eval "" into myReportedObjectId when myReportedObjectId == null
+Eval "" into myReportedObjectSite when myReportedObjectSite == null
+Eval "" into myContractId when myContractId == null
+Eval "0" into myLineNo when myLineNo == null
+
 Create RequestHandling.svc/SrvRequestVirtualSet into ServiceRequestResponse
 {
     "CustomerId": "{$input.CustomerId}",
@@ -124,7 +134,11 @@ Create RequestHandling.svc/SrvRequestVirtualSet into ServiceRequestResponse
     "IsAppointmentBookingAllowedFinal": true,
     "LocationId": "{$LocationId}",
     "AddressId": "{$AddressId}",
-    "ReferenceId":"{$input.ReferenceId}"
+    "ReferenceId":"{$input.ReferenceId}",
+    "ReportedObjectId":"{$myReportedObjectId}",
+    "ReportedObjectSite":"{$myReportedObjectSite}",
+    "ContractId":"{$myContractId}",
+    "LineNo":"{$myLineNo}"
 }
 
 

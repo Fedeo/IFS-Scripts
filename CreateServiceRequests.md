@@ -111,18 +111,12 @@ Create MapPositionsHandling.svc/MapPositionSet When KeyRefExists.value.ItemsCoun
     "LuName":"Location"
 }
 
+Eval {%input.ReportedObjectId} Into ReportedObjectId
+Eval {%input.ReportedObjectSite} Into ReportedObjectSite
+Eval {%input.ContractId} Into ContractId
+Eval {%input.LineNo} Into LineNo
 
-Eval  {%input.ReportedObjectId} into myReportedObjectId 
-Eval  {%input.ReportedObjectSite} into myReportedObjectSite
-Eval  {%input.ContractId} into myContractId 
-Eval  {%input.LineNo} into myLineNo 
-
-Eval "" into myReportedObjectId when myReportedObjectId == null
-Eval "" into myReportedObjectSite when myReportedObjectSite == null
-Eval "" into myContractId when myContractId == null
-Eval "0" into myLineNo when myLineNo == null
-
-Create RequestHandling.svc/SrvRequestVirtualSet into ServiceRequestResponse
+ApplyJson into ServiceRequest
 {
     "CustomerId": "{$input.CustomerId}",
     "Description": "{$input.requestDescr}",
@@ -135,11 +129,20 @@ Create RequestHandling.svc/SrvRequestVirtualSet into ServiceRequestResponse
     "LocationId": "{$LocationId}",
     "AddressId": "{$AddressId}",
     "ReferenceId":"{$input.ReferenceId}",
-    "ReportedObjectId":"{$myReportedObjectId}",
-    "ReportedObjectSite":"{$myReportedObjectSite}",
-    "ContractId":"{$myContractId}",
-    "LineNo":"{$myLineNo}"
+    "ReportedObjectId":"{$input.ReportedObjectId}",
+    "ReportedObjectSite":"{$input.ReportedObjectSite}",
+    "ContractId":"{$input.ContractId}",
+    "LineNo":"{$input.LineNo}"
 }
+
+RemoveJson ReportedObjectId using ServiceRequest into ServiceRequest When ReportedObjectId == null
+RemoveJson ReportedObjectSite using ServiceRequest into ServiceRequest When ReportedObjectSite == null
+RemoveJson ContractId using ServiceRequest into ServiceRequest When ContractId == null
+RemoveJson LineNo using ServiceRequest into ServiceRequest When LineNo == null
+
+
+Create RequestHandling.svc/SrvRequestVirtualSet into ServiceRequestResponse
+{$ServiceRequest}
 
 
 Eval ServiceRequestResponse.Objkey into ObjkeyParam

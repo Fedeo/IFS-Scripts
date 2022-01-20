@@ -111,8 +111,68 @@ Create MapPositionsHandling.svc/MapPositionSet When KeyRefExists.value.ItemsCoun
     "LuName":"Location"
 }
 
+
+// ###############################################
+// If there is a functional object that needs to be added 
+// to customer it adds the Party
+// ###############################################
+
 Eval {%input.ReportedObjectId} Into ReportedObjectId
 Eval {%input.ReportedObjectSite} Into ReportedObjectSite
+
+
+//Check if the object is a serial object or functional object
+
+Query FunctionalObjectHandling.svc/EquipmentFunctionalSet Select "MchCode" Filter With Json Into isFunctionalObject When ReportedObjectId != null
+{
+	"Contract":"{$ReportedObjectSite}",
+	"MchCode":"{$ReportedObjectId}"
+}  
+
+
+Query SerialObjectsHandling.svc/EquipmentSerialSet Select "MchCode" Filter With Json Into isSerialObject When ReportedObjectId != null
+{
+	"Contract":"{$ReportedObjectSite}",
+	"MchCode":"{$ReportedObjectId}"
+}  
+
+
+// ### Check if FunctionalObject and CustomerId are already associated ####
+Query FunctionalObjectHandling.svc/EquipmentFunctionalSet(MchCode='{$ReportedObjectId}',Contract='{$ReportedObjectSite}')/EquipmentObjectPartyArray Select "MchCode" Filter With Json Into ObjectAndCustomerAreRelated when ReportedObjectId != null && isFunctionalObject.value.ItemsCount() == 1
+{
+	"Identity":"{$input.CustomerId}"
+}  
+
+//Add the customer to the functional object
+Create FunctionalObjectHandling.svc/EquipmentFunctionalSet(MchCode='{$ReportedObjectId}',Contract='{$ReportedObjectSite}')/EquipmentObjectPartyArray When  ObjectAndCustomerAreRelated.value.ItemsCount()  == 0 && isFunctionalObject.value.ItemsCount() == 1
+{
+	"Contract":"{$ReportedObjectSite}",
+	"MchCode":"{$ReportedObjectId}",
+	"Identity":"{$input.CustomerId}",
+	"PartyType":"Customer"
+}
+
+// ### Check if SerialObject and CustomerId are already associated ####
+Query SerialObjectsHandling.svc/EquipmentSerialSet(MchCode='{$ReportedObjectId}',Contract='{$ReportedObjectSite}')/EquipmentObjectPartyArray Select "MchCode" Filter With Json Into SerObjectAndCustomerAreRelated When ReportedObjectId != null && isSerialObject.value.ItemsCount() == 1
+{
+	"Identity":"{$input.CustomerId}"
+}  
+
+
+//Add the customer to the functional object
+Create SerialObjectsHandling.svc/EquipmentSerialSet(MchCode='{$ReportedObjectId}',Contract='{$ReportedObjectSite}')/EquipmentObjectPartyArray When SerObjectAndCustomerAreRelated.value.ItemsCount() == 0 && isSerialObject.value.ItemsCount() == 1
+{
+	"Contract":"{$ReportedObjectSite}",
+	"MchCode":"{$ReportedObjectId}",
+	"Identity":"{$input.CustomerId}",
+	"PartyType":"Customer"
+}
+
+// ###############################################
+// Create and Release the final request
+// ###############################################
+
+
 Eval {%input.ContractId} Into ContractId
 Eval {%input.LineNo} Into LineNo
 
